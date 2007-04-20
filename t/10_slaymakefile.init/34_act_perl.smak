@@ -1,0 +1,12 @@
+include common.smakh
+
+{
+    $ENV{FILE} = $FILE = "32_act_array";
+}
+
+default:   depend1 depend2 depend3
+	{ trace(@_)
+	  }
+	      # Oops, an unmatched }
+
+# The default action already *is* a perl action

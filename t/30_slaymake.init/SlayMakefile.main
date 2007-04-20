@@ -1,0 +1,34 @@
+#  -*- makefile -*-
+{
+    use strict;
+
+    use vars qw(@OKS $SANITIZE $SLAYMAKE);
+
+    my @exps = <*.log.exp>;
+    @OKS = @exps;
+    s((.*)\.log\.exp\z)($1.ok) foreach @OKS;
+
+    my @flags;
+    push @flags, "-d" if $ENV{DEBUG};
+    push @flags, "-M'Devel::Cover=-db,../cover_db,-silent,1,-summary,0,+ignore,.*,+select,/script/'"
+	if $ENV{COVER};
+    my $flags = join ' ', @flags;
+    $SLAYMAKE = "$^X $flags -I ../../blib/lib ../../blib/script/slaymake";
+    $SANITIZE = "$^X -pe 's/slaymake line \\d+/slaymake line 314159/'";
+}
+
+test:	{ @OKS }
+
+# Fault grading
+%.ok:	%.log
+	diff $DEP0.exp $DEP0 > $TARGET 2>&1
+
+# Test execution
+SlayMakefile.log: SlayMakefile
+	$SLAYMAKE > $TARGET 2>&1
+
+opt_%.log:
+	$SLAYMAKE -$1 2>&1 | head -2 > $TARGET 
+
+%.log:	%.smak
+	$SLAYMAKE -f $DEP0 2>&1 | $SANITIZE > $TARGET
