@@ -1,0 +1,9 @@
+CHANGES for vcp - Version CoPy
+
+0.02 Tue Jun 27 17:32:28 CDT 2007
+   - Updated to use (and require) Slay::Maker 0.4.
+   - Added the "strict" option.
+   - Added an error message if there's an unmatched left brace.
+
+0.01 Fri Apr 20 12:00:00 CDT 2007
+   - Initial public release.

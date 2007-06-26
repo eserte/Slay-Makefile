@@ -1,3 +1,4 @@
+CHANGES
 Changes
 MANIFEST			This list of files
 MANIFEST.SKIP
@@ -23,6 +24,7 @@ t/10_slaymakefile.init/32_act_array.log.exp
 t/10_slaymakefile.init/32_act_array.smak
 t/10_slaymakefile.init/34_act_perl.log.exp
 t/10_slaymakefile.init/34_act_perl.smak
+t/10_slaymakefile.init/36_act_perl_die.smak
 t/10_slaymakefile.init/40_tgt_mult.log.exp
 t/10_slaymakefile.init/40_tgt_mult.smak
 t/10_slaymakefile.init/42_tgt_code_str.log.exp
@@ -62,6 +64,8 @@ t/20_slaymakefile_msg.init/tgt_extra_input.log.exp
 t/20_slaymakefile_msg.init/tgt_extra_input.smak
 t/20_slaymakefile_msg.init/tgt_return_type.log.exp
 t/20_slaymakefile_msg.init/tgt_return_type.smak
+t/20_slaymakefile_msg.init/unmatched_brace.log.exp
+t/20_slaymakefile_msg.init/unmatched_brace.smak
 t/20_slaymakefile_msg.t
 t/30_slaymake.init/SlayMakefile
 t/30_slaymake.init/SlayMakefile.log.exp

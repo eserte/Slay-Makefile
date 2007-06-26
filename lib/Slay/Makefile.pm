@@ -9,7 +9,7 @@ Slay::Makefile - Wrapper to Slay::Maker that reads the rules from a file
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 SYNOPSIS
 
@@ -106,11 +106,15 @@ unnecessary (automatic) within a perl block or perl anonymous array.
 =cut
 
 use Carp;
-use Slay::Maker;
+use Slay::Maker 0.04;
 
-=item C<new>
+=item C<new([$options])>
 
-Class method.  Creates a new C<Slay::Makefile> object.
+Class method.  Creates a new C<Slay::Makefile> object using the
+optional C<$options> argument.  It also process the following options
+out of C<$options>:
+
+  strict:      If 0, do not enforce strict checking on perl blocks
 
 =cut
 
@@ -120,7 +124,8 @@ sub new {
     my $self = bless {}, $class;
     $options = {} unless $options;
 
-    $self->{maker} = new Slay::Maker($options);
+    $self->{maker}   = new Slay::Maker({options => $options});
+    $self->{options} = $options;
 
     return $self;
 }
@@ -407,6 +412,7 @@ sub parse_string : method {
 	    $stmt_line = $lineno+$l+1;
 	}
     }
+    $self->_croak("Unmatched \{", $filename, $stmt_line) if $in_braces;
     return $self->{errors};
 }
 
@@ -461,7 +467,9 @@ sub _eval : method {
     my ($self, $perl, $filename, $stmt_line) = @_;
 
     my $ld = qq(\#line $stmt_line "$filename"\n);
-    my @val = eval "${ld}package Slay::Makefile::Eval; no strict; $perl";
+    my $strict = defined $self->{options}{strict} &&
+	$self->{options}{strict} == 0 ? 'no strict;' : '';
+    my @val = eval "${ld}package Slay::Makefile::Eval; $strict $perl";
     chomp $@;
     $self->_croak($@, $filename, $stmt_line) if $@;
     return @val;

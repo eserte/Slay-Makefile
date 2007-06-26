@@ -68,7 +68,7 @@ sub main {
     }
     else {
 	$sm->make(@ARGV);
-	print @{$sm->maker->{OUTPUT}};
+	print $sm->maker->output;
     }
 }
 
