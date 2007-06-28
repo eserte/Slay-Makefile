@@ -1,5 +1,8 @@
 CHANGES for vcp - Version CoPy
 
+0.03 Thu Jun 29 10:33:41 CDT 2007
+   - Updated Makefile.PL to require Slay::Maker 0.4.
+
 0.02 Tue Jun 27 17:32:28 CDT 2007
    - Updated to use (and require) Slay::Maker 0.4.
    - Added the "strict" option.

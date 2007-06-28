@@ -10,7 +10,7 @@ WriteMakefile(
     EXE_FILES           => [qw(slaymake)],
     PL_FILES            => {},
     PREREQ_PM => {
-	'Slay::Maker' => 0.02,
+	'Slay::Maker' => 0.04,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'Slay-Makefile-*' },

@@ -79,3 +79,4 @@ t/30_slaymake.init/opt_q.log.exp
 t/30_slaymake.t
 t/Common.smak
 t/runtests.pm
+META.yml                                 Module meta-data (added by MakeMaker)
