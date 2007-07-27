@@ -12,7 +12,7 @@ default:   depend1 depend2 depend3
 depend%:  my_prereq% your_prereq%
         echo "Building $TARGET with deps ($DEP0, $DEP1) and match ($1)" >> $FILE.trace
         echo "   $""* is $*" >> $FILE.trace
-        echo "   $""FOO is ${FOO}" >> $FILE.trace
+        if [[ -e trace.pm ]] ; then echo "   $""FOO is ${FOO}" >> $FILE.trace; fi
 
 extra:
         echo No such variable $NOSUCHVAR or ${NOSUCHVAR}

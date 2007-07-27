@@ -19,12 +19,15 @@ test:	{ @OKS }
 %.log:	%.smak
 	{
 	    my ($maker, $target, $deps, $matches) = @_;
-	    my $sm = Slay::Makefile->new( );
+	    my %options;
+	    $options{debug} = 1 if $ENV{DEBUG};
+	    my $sm = Slay::Makefile->new(\%options );
 	    @OUTPUT = ();
 	    eval { $sm->parse($deps->[0]); };
 	    push @OUTPUT, $@ if $@;
 	    if ($@ =~ /requires explicit package name/) {
-		$sm = Slay::Makefile->new( { strict=>0 } );
+		$options{strict} = 0;
+		$sm = Slay::Makefile->new( \%options );
 		$sm->parse($deps->[0]);
 	    }
 	    $sm->make;

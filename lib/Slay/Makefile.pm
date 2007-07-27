@@ -9,7 +9,7 @@ Slay::Makefile - Wrapper to Slay::Maker that reads the rules from a file
 
 =cut
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 =head1 SYNOPSIS
 
@@ -346,6 +346,7 @@ sub parse_string : method {
 			    }
 			    else {
 				# It's a command
+				$act2 = _expand($act2, $brackets, qw([ ]));
 				chomp ($act2 =
 				       _substitute(_expand($act2, $braces)));
 				$act2 =~ s/^\s*\#.*//;

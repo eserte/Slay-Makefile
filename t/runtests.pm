@@ -33,13 +33,12 @@ sub do_tests {
 	plan(skip_all => "$error") if $?;
     }
 
+    my %options;
     my $sm = Slay::Makefile->new();
     $sm->parse("../Common.smak");
     $sm->maker->check_targets('test');
 
     # Get list of targets
-    #    N.B.: there should be a way to do this without looking
-    #    under the skirts of Slay::Maker.
     my ($rule, $deps, $matches) = $sm->maker->get_rule_info('test');
     my @tests = @ARGV ? @ARGV : defined $rule && $deps ? @$deps : () ;
     plan tests => 0+@tests;
