@@ -1,5 +1,8 @@
 CHANGES for vcp - Version CoPy
 
+0.05 Tue Jul 31 10:43:29 CDT 2007
+   - Changed regression test so it's less shell-dependent.
+
 0.04 Fri Jul 27 10:55:09 CDT 2007
    - Fixed a bug where shell actions had expressions in brackets
      compressed but not re-expanded.   
