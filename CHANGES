@@ -1,5 +1,8 @@
 CHANGES for vcp - Version CoPy
 
+0.06 Tue Aug 08 16:22:50 CDT 2007
+   - Added support for HEREIS strings within perl dependencies/actions.
+
 0.05 Tue Jul 31 10:43:29 CDT 2007
    - Changed regression test so it's less shell-dependent.
 

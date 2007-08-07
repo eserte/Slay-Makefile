@@ -9,7 +9,7 @@ Slay::Makefile - Wrapper to Slay::Maker that reads the rules from a file
 
 =cut
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 =head1 SYNOPSIS
 
@@ -98,6 +98,10 @@ Comments begin with a C<#> and extend to the end of line.
 Continuation lines can be specified by putting a backslash at the end
 of the previous line, provided however, that continuation lines are
 unnecessary (automatic) within a perl block or perl anonymous array.
+Although continuation lines in a perl dependency or action must begin
+with at least one space so a that the parser does not think a new rule
+is beginning, the minimum indentation is removed prior to evaluation
+so that HEREIS strings can be used.
 
 =head1 METHODS
 
@@ -470,6 +474,13 @@ sub _eval : method {
     my $ld = qq(\#line $stmt_line "$filename"\n);
     my $strict = defined $self->{options}{strict} &&
 	$self->{options}{strict} == 0 ? 'no strict;' : '';
+    # Remove minimum indentation of perl block so that HEREIS strings
+    # can be used as part of dependencies or actions
+    $perl =~ s/^(\t+)/' ' x (8*length($1))/gem;
+    my @indents = $perl =~ m/^([ ]+)/gm;
+    my $min_indent = @indents ? $indents[0] : '';
+    grep do {$min_indent = $_ if length $_ < length $min_indent}, @indents;
+    $perl =~ s/^$min_indent//gm if $min_indent;
     my @val = eval "${ld}package Slay::Makefile::Eval; $strict $perl";
     chomp $@;
     $self->_croak($@, $filename, $stmt_line) if $@;
