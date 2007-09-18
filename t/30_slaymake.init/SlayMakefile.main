@@ -27,6 +27,15 @@ test:	{ @OKS }
 SlayMakefile.log: SlayMakefile
 	$SLAYMAKE > $TARGET 2>&1
 
+bad_opt_e.log:
+	$SLAYMAKE -e 'use vars qw($VAR1 $var2);' -e '$VAR1=4/0;' VAR1=Sad -e '$var2=" birthday")' -f var.smak 2>&1 | $SANITIZE > $TARGET
+
+opt_e.log:
+	$SLAYMAKE -e 'use vars qw($VAR1 $var2);' -e '$VAR1="Happy";' VAR1=Sad -e '$var2=" birthday"' -f var.smak > $TARGET 2>&1
+
+var.log:
+	$SLAYMAKE VAR1=Sad VAR1=Happy var2=' birthday' -f var.smak > $TARGET 2>&1
+
 opt_%.log:
 	$SLAYMAKE -$1 2>&1 | $SANITIZE | head -2 > $TARGET 
 

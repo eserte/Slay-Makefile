@@ -17,10 +17,15 @@ is built.
 Options:
 
   -d               Supply the debug flag to Slay::Maker
+  -e <perl-code>   Execute <perl-code> prior to parsing the SlayMakefile.
+                   May be multiple.
   -f <filename>    Use <filename> as the name of the SlayMakefile 
                    (default SlayMakefile)
   -h               Print help
   -V               Print version information
+
+  VAR=VAL          Sets $VAR to "VAL" prior to parsing the SlayMakefile.
+                   Processed before -e code.  May be multiple.
 
 =cut
 
@@ -48,12 +53,17 @@ sub main {
     use Getopt::Long;
     
     $TOOL_ID = "slaymake $VERSION";
+    
+    # Get VAR=VAL strings
+    my %assigns;
+    @ARGV = grep ! (/^([a-z]\w+)=(.*)/i && do { $assigns{$1} = $2 }), @ARGV;
+
     # Set default option values
     my %opt = (f=>'SlayMakefile');
 
     # Parse options
     Getopt::Long::config('no_ignore_case');
-    Usage() unless GetOptions \%opt, qw(d f=s h V);
+    Usage() unless GetOptions \%opt, qw(d e=s@ f=s h V);
     # Give usage information
     Usage('DESCRIPTION') if $opt{h};
     Usage('Id') if $opt{V};
@@ -61,7 +71,20 @@ sub main {
     my %options;
     $options{debug} = 1 if $opt{d};
     my $sm = Slay::Makefile->new(\%options);
-    my $errs = $sm->parse($opt{f});
+    $sm->parse_string(<<EOS) if %assigns;
+{
+use vars qw(@{[map "\$$_", keys %assigns]});
+@{[map "\$$_ = q[$assigns{$_}];\n", keys %assigns]}}
+EOS
+    my $errs;
+    if ($opt{e}) {
+	$errs = $sm->parse_string(<<EOS) ;
+{
+#line 1 "-e"
+@{[map "$_\n", @{$opt{e}}]}}
+EOS
+    }
+    $errs = $sm->parse($opt{f}) unless $errs && @$errs;
     if (@$errs) {
 	print STDERR @$errs;
 	print STDERR "Targets not built due to errors\n";

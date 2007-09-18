@@ -9,7 +9,7 @@ Slay::Makefile - Wrapper to Slay::Maker that reads the rules from a file
 
 =cut
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 =head1 SYNOPSIS
 
@@ -471,7 +471,7 @@ sub _collapse {
 sub _eval : method {
     my ($self, $perl, $filename, $stmt_line) = @_;
 
-    my $ld = qq(\#line $stmt_line "$filename"\n);
+    my $ld = defined $filename ? qq(\#line $stmt_line "$filename"\n) : '';
     my $strict = defined $self->{options}{strict} &&
 	$self->{options}{strict} == 0 ? 'no strict;' : '';
     # Remove minimum indentation of perl block so that HEREIS strings

@@ -1,7 +1,7 @@
 include common.smakh
 
 {
-    $ENV{FILE} = $FILE = "32_act_array";
+    $ENV{FILE} = $FILE = "34_act_array";
 }
 
 default:   depend1 depend2 depend3

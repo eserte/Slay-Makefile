@@ -1,5 +1,10 @@
 CHANGES for vcp - Version CoPy
 
+0.07 Tue Sep 18 12:53:05 CDT 2007
+   - Modified slaymake script to allow customization on the command
+     line either by "-e <perl-code>" flags or by "VAR=<value>"
+     arguments similar to make.
+
 0.06 Tue Aug 08 16:22:50 CDT 2007
    - Added support for HEREIS strings within perl dependencies/actions.
 
