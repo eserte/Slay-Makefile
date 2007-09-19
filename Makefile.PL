@@ -11,6 +11,8 @@ WriteMakefile(
     PL_FILES            => {},
     PREREQ_PM => {
 	'Slay::Maker' => 0.04,
+	'File::Path'  => 0,
+	'File::Copy::Recursive' => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'Slay-Makefile-*' },

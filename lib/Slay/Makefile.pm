@@ -9,7 +9,7 @@ Slay::Makefile - Wrapper to Slay::Maker that reads the rules from a file
 
 =cut
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 =head1 SYNOPSIS
 

@@ -3,9 +3,7 @@ use strict;
 use warnings;
 
 use File::Path qw(rmtree);
-use File::Copy qw(cp);
-use File::Glob qw(bsd_glob);
-use File::Basename qw(basename);
+use File::Copy::Recursive qw(dircopy);
 
 use Test::More;
 
@@ -28,11 +26,7 @@ sub do_tests {
 
     # First create the subdirectory for doing testing
     rmtree "$myname.dir" if -d "$myname.dir";
-    mkdir "$myname.dir" or die "Cannot create $myname.dir: $!";
-    for my $f (bsd_glob("$myname.init/*")) {
-        cp $f, "$myname.dir/" . basename($f)
-            or die "Cannot copy $f to $myname.dir: $!";
-    }
+    dircopy "$myname.init", "$myname.dir";
 
     chdir "$myname.dir";
 
