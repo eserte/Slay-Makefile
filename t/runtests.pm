@@ -2,6 +2,11 @@
 use strict;
 use warnings;
 
+use File::Path qw(rmtree);
+use File::Copy qw(cp);
+use File::Glob qw(bsd_glob);
+use File::Basename qw(basename);
+
 use Test::More;
 
 use FindBin;
@@ -22,8 +27,12 @@ sub do_tests {
     die "Error: No init directory for this test\n" unless -d "$myname.init";
 
     # First create the subdirectory for doing testing
-    system "rm -rf $myname.dir" if -d "$myname.dir";
-    system "cp -r $myname.init $myname.dir";
+    rmtree "$myname.dir" if -d "$myname.dir";
+    mkdir "$myname.dir" or die "Cannot create $myname.dir: $!";
+    for my $f (bsd_glob("$myname.init/*")) {
+        cp $f, "$myname.dir/" . basename($f)
+            or die "Cannot copy $f to $myname.dir: $!";
+    }
 
     chdir "$myname.dir";
 
