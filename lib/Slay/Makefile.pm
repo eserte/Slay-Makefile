@@ -1,6 +1,7 @@
 package Slay::Makefile;
 
 use warnings;
+no warnings qw(void);
 use strict;
 
 =head1 NAME
@@ -9,9 +10,9 @@ Slay::Makefile - Wrapper to Slay::Maker that reads the rules from a file
 
 =cut
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
 
 C<Slay::Maker> is a make engine that uses perl declaration syntax for
 rules, including regular expressions for targets and anonymous subs
@@ -59,10 +60,10 @@ or a <perl-block> which returns an array of dependencies (or a
 combination). The dependency string can contain C<$1>, C<$2>, ..., or
 C<%>, which is synonymous with C<$1> and C<${TARGET}>, which gets the
 target name.  They can also use any scalar global variables previously
-defined in a <perl-block>.  A dependency <perl-block> receives an
-array C<@_> with the values ($make, $target, $matches), where $make is
-a Slay::Maker object, $target is the target name, and $matches is a
-reference to an array containing the captured values from that
+defined in a <perl-block>.  A dependency <perl-block> is called with
+the values C<($make, $target, $matches)>, where C<$make> is a
+C<Slay::Maker> object, C<$target> is the target name, and C<$matches> is
+a reference to an array containing the captured values from that
 target's Regexp (if any).
 
 The colon separating a <perl-block> for <dependencies> must be on the
@@ -79,19 +80,25 @@ C<$2>, ..., for the matches, C<$DEP0>, C<$DEP1>, ..., for the
 dependencies, and C<$TARGET>, which represents the target being built.
 For make enthusiasts, C<$*> can be used for C<$1>.  A string action
 can also use any scalar global variables previously defined in a
-<perl-block>.
+<perl-block>.  An action <perl-block> is called with the values
+C<($make, $target, $deps, $matches)>, where C<$make> is a C<Slay::Maker>
+object, C<$target> is the target name, C<$deps> is a reference to the
+array of dependencies and $matches is a reference to an array
+containing the captured values from that target's Regexp (if any).
 
 An include line includes the content of a file with <filename> as a
-SlayMakefile file.  If there is no such file, Slay::Makefile will try to
-build it using rules that have already been presented.  If there is no
-such rule, Slay::Makefile exits with an error unless there was a C<->
-before the "include".
+SlayMakefile file.  If there is no such file, C<Slay::Makefile> tries
+to build it using rules that have already been presented.  If there is
+no such rule, C<Slay::Makefile> exits with an error unless there was a
+C<-> before the "include".
 
 The equivalent of make's defines are handled by setting perl global
 variables.  Each main <perl-block> is executed in the order it appears
 in the file, but any <perl-block> that is part of a dependency or
 action is evaluated lazily, so that all the global variables will have
-been set.
+been set.  A main <perl-block> is called with the value
+C<($makefile)>, where C<$makefile> is the C<Slay::Makefile> object,
+so that such code can, for example, recursively call the parse method.
 
 Comments begin with a C<#> and extend to the end of line.
 
@@ -217,6 +224,7 @@ sub parse_string : method {
 	    elsif ($stmt =~ /^\s*(-?)\s*include\s+(?!:)(.*)/) {
 		# include directive
 		my ($opt, $incfile) = ($1, $2);
+		$incfile = eval qq(package Slay::Makefile::Eval; "$incfile");
 		if (! -f $incfile) {
 		    # Check if we can build it with rules we already have
 		    eval { $self->{maker}->make($incfile) } ;
@@ -400,7 +408,8 @@ sub parse_string : method {
 			    }
 			    # Remove the enclosing {}
 			    $perl =~ s/\A \{ (.*) \} \z/$1/xs;
-			    $self->_eval($perl, $filename, $stmt_line);
+			    $self->_eval("\@_ = \$self; $perl", $filename,
+					 $stmt_line);
 			    $stmt_line += $perl =~ tr/\n//;
 			}
 			else  {

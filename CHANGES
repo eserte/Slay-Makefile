@@ -1,5 +1,13 @@
 CHANGES for vcp - Version CoPy
 
+0.10 Mon Mar 24 01:29:23 CDT 2008
+   - Try to fix failed regression test caused by void grep warning
+   - Added documentation of how action perl blocks are called
+   - Added (and documented) argument $makefile to calling sequence for
+     main perl blocks
+   - Added ability for an "include" line to use a variable for the
+     name of the file to include
+
 0.10 Wed Sep 19 13:34:34 CDT 2007
    - Fixed the PREREQ_PM in Makefile.PM to include new modules upon
      which it is dependent.
