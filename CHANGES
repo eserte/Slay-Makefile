@@ -1,6 +1,12 @@
-CHANGES for vcp - Version CoPy
+Change log:
 
-0.10 Mon Mar 24 01:29:23 CDT 2008
+0.12 Tue Nov 11 16:59:12 CST 2008
+   - Fixed a problem with slaymake when a command-line variable
+     assignment has a trailing backslash
+   - Fixed a problem with slaymake when a command-line variable has a
+     null assignment
+
+0.11 Mon Mar 24 01:29:23 CDT 2008
    - Try to fix failed regression test caused by void grep warning
    - Added documentation of how action perl blocks are called
    - Added (and documented) argument $makefile to calling sequence for
@@ -14,7 +20,7 @@ CHANGES for vcp - Version CoPy
 
 0.09 Wed Sep 19 10:04:55 CDT 2007
    - Made regression test script compatible with Windows (thanks to 
-     Slaven Rezik for the patch!).
+     Slaven Rezic for the patch!).
 
 0.08 Tue Sep 18 14:06:48 CDT 2007
    - Fixed bad -e test to use an error message common to all versions

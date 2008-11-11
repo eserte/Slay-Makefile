@@ -33,7 +33,7 @@ Options:
 =begin reST
 =begin Id
 Id: ${TOOL_ID}.
-Copyright (c) 2007 Mark Nodine.
+Copyright (c) 2007-2008 Mark Nodine.
 Distributed under terms of the Perl license, which is the disjunction of
 the GNU General Public License (GPL) and the Artistic License.
 =end Id
@@ -56,7 +56,7 @@ sub main {
     
     # Get VAR=VAL strings
     my %assigns;
-    @ARGV = grep ! (/^([a-z]\w+)=(.*)/i && do { $assigns{$1} = $2 }), @ARGV;
+    @ARGV = grep ! (/^([a-z]\w+)=(.*)/i && do { $assigns{$1} = $2; 1 }), @ARGV;
 
     # Set default option values
     my %opt = (f=>'SlayMakefile');
@@ -71,6 +71,7 @@ sub main {
     my %options;
     $options{debug} = 1 if $opt{d};
     my $sm = Slay::Makefile->new(\%options);
+    s{\\}{\\\\} foreach values %assigns;
     $sm->parse_string(<<EOS) if %assigns;
 {
 use vars qw(@{[map "\$$_", keys %assigns]});
