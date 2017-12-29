@@ -1,5 +1,8 @@
 Change log:
 
+0.13 Fri Dec 29 17:02:45 CET 2017
+   - only minor build-related changes
+
 0.12_50 Thu Dec 28 23:16:18 CET 2017
    - adapt tests for Carp 1.25 (RT #75383) and newer perls (RT #100500)
 
