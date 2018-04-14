@@ -9,7 +9,7 @@ use Test::More;
 
 use FindBin;
 
-use lib "$FindBin::RealBin/../blib/lib";
+use lib "./lib";
 use Slay::Makefile;
 
 BEGIN {
@@ -32,7 +32,7 @@ sub do_tests {
 
     # Check to see if we need to skip all tests
     if (-f "skip.pl") {
-	chomp (my $error = `$^X -I $base/blib/lib skip.pl 2>&1`);
+	chomp (my $error = `$^X -I $base/lib skip.pl 2>&1`);
 	plan(skip_all => "$error") if $?;
     }
 
