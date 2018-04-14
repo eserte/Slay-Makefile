@@ -511,7 +511,7 @@ sub _expand {
     $string =~ s/<0d>//g;
     return $string unless %$braces;
     ($open, $close) = qw({ }) unless defined $close;
-    my $re = join '|', map "\Q$_", keys %$braces;
+    my $re = join '|', map { quotemeta } sort keys %$braces;
     while ($string =~ s/($re)/$open$braces->{$1}$close/g) { }
     return $string;
 }
