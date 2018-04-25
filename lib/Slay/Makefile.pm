@@ -481,7 +481,9 @@ sub unindent {
 
     my( $min_indent ) = sort $code =~ m/^([ ]+)/gm;
 
-    $code =~ s/^$min_indent//gm;
+    $code =~ s/^$min_indent//gm if $min_indent;
+
+    return $code;
 }
 
 # Evaluates a string within the proper package
