@@ -21,6 +21,7 @@ WriteMakefile(
     AUTHOR              => 'Slaven Rezic <srezic@cpan.org>',
     VERSION_FROM        => 'lib/Slay/Makefile.pm',
     ABSTRACT            => 'Wrapper to Slay::Maker that reads the rules from a file',
+    LICENSE             => 'perl_5',
     EXE_FILES           => [qw(slaymake)],
     PL_FILES            => {},
     PREREQ_PM => {
