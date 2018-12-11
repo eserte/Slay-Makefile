@@ -161,7 +161,7 @@ with constant targets.
 =cut
 
 # '
-sub make : method {
+sub make {
     my $self = shift;
     
     $self->_croak('No targets specified and no default target provided')
@@ -177,7 +177,7 @@ of parse errors.
 
 =cut
 
-sub parse : method {
+sub parse {
     my ($self, $filename) = @_;
 
     open IN, $filename or croak "Cannot open $filename";
@@ -194,7 +194,7 @@ error reporting.  Returns a reference to an array of parse errors.
 
 =cut
 
-sub parse_string : method {
+sub parse_string {
     my ($self, $string, $filename, $lineno) = @_;
 
     $self->{errors} = [];
@@ -434,7 +434,7 @@ sub parse_string : method {
 
 # Calls carp with information as to where the problem occurred
 # Arguments: message, [filename, [lineno]]
-sub _carp : method {
+sub _carp {
     my ($self, $msg, $filename, $lineno) = @_;
 
     my @where = ($filename) if defined $filename;
@@ -477,7 +477,7 @@ sub _collapse {
 # Evaluates a string within the proper package
 # Arguments: string, filename, line number
 # Returns:  result of eval
-sub _eval : method {
+sub _eval {
     my ($self, $perl, $filename, $stmt_line) = @_;
 
     my $ld = defined $filename ? qq(\#line $stmt_line "$filename"\n) : '';
