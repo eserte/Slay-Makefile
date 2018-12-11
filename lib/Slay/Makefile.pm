@@ -474,6 +474,18 @@ sub _collapse {
     return ($str, \%braces);
 }
 
+sub unindent {
+    my ( $self, $code ) = @_;
+
+    $code =~ s/^(\t+)/' ' x (8*length($1))/gem;
+
+    my( $min_indent ) = sort $code =~ m/^([ ]+)/gm;
+
+    $code =~ s/^$min_indent//gm if $min_indent;
+
+    return $code;
+}
+
 # Evaluates a string within the proper package
 # Arguments: string, filename, line number
 # Returns:  result of eval
@@ -485,11 +497,8 @@ sub _eval : method {
 	$self->{options}{strict} == 0 ? 'no strict;' : '';
     # Remove minimum indentation of perl block so that HEREIS strings
     # can be used as part of dependencies or actions
-    $perl =~ s/^(\t+)/' ' x (8*length($1))/gem;
-    my @indents = $perl =~ m/^([ ]+)/gm;
-    my $min_indent = @indents ? $indents[0] : '';
-    grep do {$min_indent = $_ if length $_ < length $min_indent}, @indents;
-    $perl =~ s/^$min_indent//gm if $min_indent;
+    $perl = $self->unindent($perl);
+
     my @val = eval "${ld}package Slay::Makefile::Eval; $strict $perl";
     chomp $@;
     $self->_croak($@, $filename, $stmt_line) if $@;
@@ -504,7 +513,7 @@ sub _expand {
     $string =~ s/<0d>//g;
     return $string unless %$braces;
     ($open, $close) = qw({ }) unless defined $close;
-    my $re = join '|', map "\Q$_", keys %$braces;
+    my $re = join '|', map { quotemeta } sort keys %$braces;
     while ($string =~ s/($re)/$open$braces->{$1}$close/g) { }
     return $string;
 }
