@@ -1,21 +1,32 @@
 language: perl
-
-dist: trusty
-
+arch:
+ - arm64
 matrix:
-  include:
-# First five
-    - perl: "5.26"
-    - perl: "5.24"
-    - perl: "5.22"
-    - perl: "5.10"
-    - perl: "5.8"
-# Next rounds
-    - perl: "5.20"
-    - perl: "5.18"
-    - perl: "5.16"
-    - perl: "5.14"
-    - perl: "5.12"
+ include:
+  - dist: xenial
+    perl: 5.24
+  - dist: bionic
+    perl: 5.26
+  - dist: focal
+    perl: 5.32
+
+#dist: trusty
+#
+#matrix:
+#  include:
+## First five
+#    - perl: "5.26"
+#    - perl: "5.24"
+#    - perl: "5.22"
+#    - perl: "5.10"
+#    - perl: "5.8"
+## Next rounds
+#    - perl: "5.20"
+#    - perl: "5.18"
+#    - perl: "5.16"
+#    - perl: "5.14"
+#    - perl: "5.12"
+#sudo: false
 
 script:
  - perl Makefile.PL && env HARNESS_TIMER=1 HARNESS_OPTIONS=j4:c make disttest
@@ -24,6 +35,7 @@ after_script:
  - make distcheck
 
 branches:
-  except:
-    - /appveyor/
-sudo: false
+ except:
+  - /appveyor/
+  - /github-actions/
+  - /doozer/
