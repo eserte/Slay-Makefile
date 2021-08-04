@@ -26,7 +26,7 @@ install:
   - if %perl%==activeperl       ppm install dmake App-cpanminus
   - if not %perl%==cygwinperl   cpanm --installdeps .
   # Install the missing crypt.h for compiling XS modules
-  - if     %perl%==cygwinperl   c:\cygwin\setup-x86.exe -q --packages=libcrypt-devel
+  - if     %perl%==cygwinperl   c:\cygwin\setup-x86.exe -q --packages=libcrypt-devel,perl
   - if     %perl%==cygwinperl   c:\cygwin\bin\sh -c "PATH=/usr/bin:/bin; (cd /tmp && git clone https://github.com/eserte/travis-helper-cpan-pm.git && ./travis-helper-cpan-pm/travis-helper-cpan-pm --no-sudo)"
   # Fails test suite, so install with -T
   # See also http://www.cpantesters.org/cpan/report/05b8e62e-a914-1014-a63b-77b394f39f87
