@@ -57,6 +57,6 @@ jobs:
     - name: Build and test
       run: |
         set -e
-        cpanm --quiet --installdeps --notest . || ( cat /github/home/.cpanm/work/*/build.log; false )
+        cpanm --quiet --installdeps --notest . || ( cat ~/.cpanm/work/*/build.log; false )
         perl Makefile.PL
         HARNESS_TIMER=1 HARNESS_OPTIONS=j4:c make test
