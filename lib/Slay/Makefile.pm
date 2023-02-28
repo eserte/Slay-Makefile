@@ -490,9 +490,16 @@ sub _eval : method {
     my $min_indent = @indents ? $indents[0] : '';
     grep do {$min_indent = $_ if length $_ < length $min_indent}, @indents;
     $perl =~ s/^$min_indent//gm if $min_indent;
-    my @val = eval "${ld}package Slay::Makefile::Eval; $strict $perl";
-    chomp $@;
-    $self->_croak($@, $filename, $stmt_line) if $@;
+    #local $SIG{__WARN__}= sub { Carp::cluck($_[0]) };
+    my $code = "${ld}package Slay::Makefile::Eval; $strict $perl";
+    #print STDERR "Eval-Begin\n$code\nEval-End\n\n";
+    my @val = eval $code;
+    if ($@) {
+        my $error = $@;
+        $error =~ s/^Execution of .* aborted due to compilation errors.*\n//m;
+        chomp $error;
+        $self->_croak($error, $filename, $stmt_line);
+    }
     return @val;
 }
 
