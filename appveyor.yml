@@ -17,21 +17,26 @@ environment:
 #    - perl: strawberryperl
 #      make: gmake
 
+init:
+  ps: |
+    if($env:perl -eq "cygwinperl"){
+      (New-Object Net.WebClient).DownloadFile('https://cygwin.com/setup-x86_64.exe', 'C:\cygwin64\setup-x86_64.exe')
+    }
+
 install:
   - if %perl%==strawberryperl ( if not exist "C:\strawberry" cinst strawberryperl )
   - if %perl%==strawberryperl   set PATH=C:\strawberry\perl\bin;C:\strawberry\perl\site\bin;C:\strawberry\c\bin;%PATH%
   - if not %perl%==cygwinperl   perl -v
-  - if     %perl%==cygwinperl   c:\cygwin\bin\sh -c "/usr/bin/perl -v"
   - cd C:\projects\%APPVEYOR_PROJECT_NAME%
   - if %perl%==activeperl       ppm install dmake App-cpanminus
   - if not %perl%==cygwinperl   cpanm --installdeps .
-  # Install the missing crypt.h for compiling XS modules
-  - if     %perl%==cygwinperl   c:\cygwin\setup-x86.exe -q --packages=libcrypt-devel,perl
-  - if     %perl%==cygwinperl   c:\cygwin\bin\sh -c "PATH=/usr/bin:/bin; (cd /tmp && git clone https://github.com/eserte/travis-helper-cpan-pm.git && ./travis-helper-cpan-pm/travis-helper-cpan-pm --no-sudo)"
-  # Fails test suite, so install with -T
-  # See also http://www.cpantesters.org/cpan/report/05b8e62e-a914-1014-a63b-77b394f39f87
-  - if     %perl%==cygwinperl   c:\cygwin\bin\sh -c "PATH=/usr/bin:/bin; cpan -T Test::File"
+  # The cygwin install seems to be completely broken (maybe a mixture of 32bit and 64bit, and not upgradable),
+  # so do a complete install in a fresh directory.
+  - if     %perl%==cygwinperl   c:\cygwin64\setup-x86_64.exe -R c:\cygwin64-2 -q --packages=perl,git,make
+  - if     %perl%==cygwinperl   c:\cygwin64-2\bin\sh -c "PATH=/usr/bin:/bin; (cd /tmp && git clone https://github.com/eserte/travis-helper-cpan-pm.git && ./travis-helper-cpan-pm/travis-helper-cpan-pm --no-sudo)"
 
 build_script:
-  - if     %perl%==cygwinperl   c:\cygwin\bin\sh -c "PATH=/usr/bin:/bin; cpan -t ."
+  # A failed "cpan -t ." does not cause a exit code != 0, so do a full install and run the test suite separately
+  - if     %perl%==cygwinperl   c:\cygwin64-2\bin\sh -c "PATH=/usr/bin:/bin; cpan ."
+  - if     %perl%==cygwinperl   c:\cygwin64-2\bin\sh -c "PATH=/usr/bin:/bin; perl Makefile.PL && make disttest"
   - if not %perl%==cygwinperl ( perl Makefile.PL && %make% test )
