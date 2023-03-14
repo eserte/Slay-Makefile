@@ -32,7 +32,7 @@ install:
   - if not %perl%==cygwinperl   cpanm --installdeps .
   # The cygwin install seems to be completely broken (maybe a mixture of 32bit and 64bit, and not upgradable),
   # so do a complete install in a fresh directory.
-  - if     %perl%==cygwinperl   c:\cygwin64\setup-x86_64.exe -R c:\cygwin64-2 -q --packages=perl,git,make
+  - if     %perl%==cygwinperl   c:\cygwin64\setup-x86_64.exe -R c:\cygwin64-2 -q --packages=perl,git,make,perl-YAML,perl-File-Copy-Recursive,perl-Module-Build,perl-IPC-Run
   - if     %perl%==cygwinperl   c:\cygwin64-2\bin\sh -c "PATH=/usr/bin:/bin; (cd /tmp && git clone https://github.com/eserte/travis-helper-cpan-pm.git && ./travis-helper-cpan-pm/travis-helper-cpan-pm --no-sudo)"
 
 build_script:
