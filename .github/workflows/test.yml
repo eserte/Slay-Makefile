@@ -62,4 +62,4 @@ jobs:
         set -e
         cpanm --quiet --installdeps --notest . || ( cat ~/.cpanm/work/*/build.log; false )
         perl Makefile.PL
-        HARNESS_TIMER=1 HARNESS_OPTIONS=j4:c make test
+        HARNESS_TIMER=1 HARNESS_OPTIONS=j4:c make disttest
