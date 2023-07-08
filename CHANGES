@@ -1,5 +1,10 @@
 Change log:
 
+0.13_50 Sat Jul  8 17:54:13 CEST 2023
+   - mark a failing test (perl 5.38.0) as "todo", see also:
+     https://github.com/Perl/perl5/issues/20864
+     https://github.com/eserte/Slay-Makefile/pull/6
+
 0.13 Fri Dec 29 17:02:45 CET 2017
    - only minor build-related changes
 
