@@ -55,6 +55,7 @@ jobs:
           - perlimage: 5.22.4-stretch
           - perlimage: 5.36.0-bullseye
           - perlimage: 5.38.0-bookworm
+          - perlimage: 5.40.0-bookworm
     steps:
     - uses: actions/checkout@v3
     - name: Build and test
